@@ -3,7 +3,7 @@ title: "私が教えて欲しかったLaTeXワークフロー"
 emoji: "📝"
 type: "tech" 
 topics: ["tex", "latex", "bibtex", "zotero", "vscode"]
-published: false
+published: true
 ---
 
 ## はじめに
@@ -69,7 +69,8 @@ MacOS用のパッケージマネージャーです。 ターミナルからコ�
 
 ### ファイル構成
 このワークフローに対応したレポジトリを用意しました。 ファイル構成の例としてご活用ください。
-また、 VSCodeのRemote Containersを利用することで、 OSに依存せずに完全な再現が可能です。^[ただし、 Zoteroのインストールを除きます。]
+https://github.com/nicetak/bibtex-demo
+また、VSCodeのRemote Containersを用いて、OSに依存しない完全な再現が可能です。^[ただし、 Zoteroのインストールを除きます。]
 
 :::details Remote Containersとは?
 Dockerを用いて仮想マシン上でVSCodeを実行する環境です。 仮想マシン上に同一の環境を構築することで、 OSによらず共通の環境で作業ができます。 Dockerについてはいずれ記事にする予定ですが、 少し説明が長くなるので、 ご存知ない方はここではとばしてください。
@@ -141,7 +142,7 @@ Zoteroにアイテムを追加するにはいくつか方法があります.
 BibTeXの設定は簡単で、
 - `\bibliography{}` → `.bib`ファイルの名前
 - `\bibliographystyle{}` → 参考文献や引用の形式。`.bst`ファイル
-を二つを`.tex`ファイルに記述するだけです。^[拡張子の`.bib`や`.bst`はなくても構いません。]
+の二つを`.tex`ファイルに記述するだけです。^[拡張子の`.bib`や`.bst`はなくても構いません。]
 ```tex: main.tex
 \bibliography{bibtex-demo.bib}
 \bibliographystyle{econ-aea.bst}
