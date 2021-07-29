@@ -101,7 +101,7 @@ Zoteroにアイテムを追加するにはいくつか方法があります.
 ![](/images/zotero-tex-bibtex/drag-drop.gif)
 *ドラッグ&ドロップ*
 
-これらの方法は、文献情報自体も自動で取得してくれるので便利なように見えます。しかし、私はあまりおすすめしません。理由は簡単で、文献情報が**取得できない**または**間違いがある**からです。
+これらの方法は、文献情報自体も自動で取得してくれるので便利なように見えます。しかし、私はあまりおすすめしません。理由は簡単で、文献情報が**取得できない**または**間違いがある**場合があるからです。
 
 私がおすすめするのはやり方は以下です。
 1. 版元のウェブサイトから`.ris`ファイルまたは`.bib`ファイルをダウンロードする
@@ -128,16 +128,124 @@ Zoteroにアイテムを追加するにはいくつか方法があります.
 `exportOption.keepUpdated`のおかげで、新しくアイテムを追加した場合`.bib`ファイルも自動で変更されます。
 :::
 
-### $\LaTeX$
+### BibTeX
+#### 1. `natbib`の設定
+「著者名(年)」のような引用の形式を扱うために`natbib.sty`を読みこみます。これは`.bst`ファイルの依存にもよるので分野ごとに違う可能性があります。後述する`econ-aea.bst`の前提となっているのが`natbib`のため、ここで読み込みます。
 
-#### 1. 適切な`.bst`ファイルの設定
+プリアンブルに以下を追加
+```tex: main.tex
+\usepackage[longnamefirst]{natbib}
+```
 
 #### 2. `\bibliography{}`と`\bibliographystyle{}`を設定する
+BibTeXの設定は簡単で、
+- `\bibliography{}` → `.bib`ファイルの名前
+- `\bibliographystyle{}` → 参考文献や引用の形式。`.bst`ファイル
+を二つを`.tex`ファイルに記述するだけです。^[拡張子の`.bib`や`.bst`はなくても構いません。]
+```tex: main.tex
+\bibliography{bibtex-demo.bib}
+\bibliographystyle{econ-aea.bst}
+```
+私の専門は経済学なので、ここでは`econ-aea.bst`を使います。それぞれの専門や投稿先に合わせて変更してください。ひとまず`main.tex`と同じディレクトリにおいておけば問題ありません。
+:::details econ-aea.bstとは？
+American Economic Association (AEA)の出版するジャーナルに準拠した形式の`.bst`ファイル。作者の武田史郎先生による解説を読むことをおすすめします。
+[経済学におけるBibTeXの利用](https://qiita.com/shiro_takeda/items/92adf0b20c501548355e)
+:::
 
 #### 3. BibTeXのキーを用いて引用する
+`natbib`では引用の際に`\citet`または`\citep`を用います。この時使用するキーはZotero内の文献情報の一番上にある`Citation Key:`の部分です。
+![](/images/zotero-tex-bibtex/citation-key.png)
+*Piketty et al. (2018)のCitation Key*
 
-#### 3. 補論: `subfiles`を使う
+```tex
+\citet{pikettyDistributionalNationalAccounts2018b}
+```
+なお、このキーはZoteroの設定によって出力形式を変えることができます。
+(例：`piketty2018b:distributional`)
+
+BibTeXの便利な点として、文中で**引用された文献だけ**が参考文献リストにのることです。したがって、Zoteroのcollectionには最終的な引用の可能性を考えずに関連する文献を**どんどん追加しましょう。**
+
+::::details 補論: subfilesを使う場合
+論文を書く際に、章や節ごとに`.tex`ファイルを分けたいということがあるでしょう。その際、よく使われるパッケージが`subfiles`です。しかし、`\bibliography{}`は一度しか宣言できないため、`subfiles`とは相性が悪いです。これは`ifthen`文を用いれば解決できます。
+```tex: main.tex
+\documentclass{article}
+\usepackage{subfiles}
+\usepackage{ifthen}
+
+% BibTeX
+\usepackage[longnamesfirst]{natbib}
+\usepackage{hyperref}
+
+\begin{document}
+
+% For Subfiles with BibTeX
+\newboolean{isMain}
+\setboolean{isMain}{true}
+
+% Body
+\subfile{1_intro}
+\subfile{2_body}
+\subfile{3_concl}
+
+% Reference
+\newpage
+\bibliography{bibtex-demo.bib}
+\bibliographystyle{econ-aea.bst}
+
+\end{document}
+```
+
+```tex: 1_intro.tex
+\documentclass[./main]{subfiles}
+\newboolean{isMain}
+\setboolean{isMain}{false}
+
+\begin{document}
+\section{Introduction}
+% 中略
+
+\ifthenelse{\boolean{isMain}}{ %pass 
+}{ %else 
+    \bibliography{bibtex-demo.bib}
+    \bibliographystyle{econ-aea.bst} 
+}
+
+\end{document}
+```
+
+これは`subfiles`において個別ファイルのプリアンブルが無視されることを利用して
+- 個別ファイルのコンパイルでは`isMain`が`false`なので、個別ファイル内の`\bibligoraphy{}`が宣言される
+- `main.tex`のコンパイルでは`isMain`が`true`なので、個別ファイルの`\bibliography{}`は無視される
+
+ことによって達成されています。
+::::
 
 
+## VSCode LaTeX Workshop Extension
+VSCodeで$\LaTeX$を使う場合、LaTeX Workshop Extensionを使うことを強くおすすめします。
+https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop
 
-## VSCode LaTeX Workshop
+コード補完、マウスオーバー、スニペット機能。どれをとっても申し分ないです。また、SyncTeXに対応しているので、PDFをクリックするとコードの該当箇所に飛ぶ、なんていうことも可能です。`subfiles`にも対応しているので、通常のコンパイルと同様に`subfiles`の個別ファイルをコンパイルすることも可能です。
+![](/images/zotero-tex-bibtex/latex-workshop.gif)
+公式のページの機能の紹介がかなり分かりやすいので、上記のリンクから見ることをおすすめします。
+
+### $\LaTeX$ にGrammarlyを直接かける方法
+[Grammarly](https://www.grammarly.com/)といえば、言わずと知れた英文添削ソフトです。公式にはWordやGoogle Docsなどに対応していますが、実は非公式ながら$\LaTeX$に直接Grammarlyをかける方法があります。
+#### VSCodeの場合
+以下のVSCodeの拡張機能を使うだけです。ログインにも対応しているので、有料会員の機能も使うことができます。詳しい使い方は以下のリンク先を参考にしてください。
+https://marketplace.visualstudio.com/items?itemName=znck.grammarly
+
+#### Overleafの場合
+Grammarly公式のChrome拡張である以下を入れた状態で
+https://chrome.google.com/webstore/detail/grammarly-for-chrome/kbfnbcaeplbcioakkpcpgfkobkghlhen
+以下の拡張を入れます。
+https://chrome.google.com/webstore/detail/overleaf-textarea/iejmieihafhhmjpoblelhbpdgchbckil
+詳しい使い方は上記のChromeストアのOverleaf textareaのページを見てください。
+
+## おわりに
+
+以上が私が普段使っている$\LaTeX$環境です。一度設定してしまえば、
+- 引用する可能性のある文献をZoteroに追加する
+- 引用する際はBibTeXのキーを使う
+
+を繰り返すだけです。また、英文添削も拡張機能を入れるだけで自動化することができます。みなさまの論文ライフが少しでも楽になれば幸いです。
