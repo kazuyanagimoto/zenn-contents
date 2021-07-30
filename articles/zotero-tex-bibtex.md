@@ -1,5 +1,5 @@
 ---
-title: "私が教えて欲しかったLaTeXワークフロー"
+title: "VSCode + Zotero + BibTeXによる論文執筆ワークフロー"
 emoji: "📝"
 type: "tech" 
 topics: ["tex", "latex", "bibtex", "zotero", "vscode"]
