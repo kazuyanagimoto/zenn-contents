@@ -6,21 +6,21 @@ topics: ["tex", "latex", "bibtex", "zotero", "vscode"]
 published: true
 ---
 
-## はじめに
+# はじめに
 
-### $\LaTeX$は誰も教えてくれない
+## $\LaTeX$は誰も教えてくれない
 みなさん、 いつから$\LaTeX$を使いはじめたでしょうか。 大学一年生でしょうか。 ゼミや研究室に入った時でしょうか。 はたまた卒論や修論を執筆しはじめた時でしょうか。 
 
 そのとき、 誰か今節丁寧に教えてくれましたか？ 少なくとも、私の周りではそんなことありませんでした。誰も教えてないのに、みんな元から知ってたかのような顔をして、当たり前のように使っている。でも使い方について話題に上がることもないから、みんながなんとなくで使っている。そんな感じじゃないでしょうか。
 
-### BibTeXや文献管理ソフトはもっと教えてくれない
+## BibTeXや文献管理ソフトはもっと教えてくれない
 テンプレートを使いながら、コマンドをググればなんとか$\LaTeX$で文章を自力で作成することは可能です。しかし、文献引用についてはどうでしょう。世の中にはZoteroやMendeleyといった文献管理ソフトやBibTeXという文献引用のために便利なツールがあります。しかし、誰も教えてくれないから、修論を書き終わったり、Publicationをもっている人でさえも、使っていない人は少なくないのではないでしょうか。
 
 この記事では、文献引用の自動化を主眼においた、$\LaTeX$執筆のワークフローを紹介します。みなさまが、退屈なことはすべてツールにまかせて、論文に集中できることを願ってやみません。
 
 
-## 環境
-### ソフトウェア
+# 環境
+## ソフトウェア
 使用するソフトウェアは$\LaTeX$の他に以下の二つです
 - [Zotero](https://www.zotero.org/) (文献管理、 BibTeX出力)
 - [Visual Studio Code](https://code.visualstudio.com/) (主に$\LaTeX$のエディターとして)
@@ -52,7 +52,7 @@ VSCodeを利用した場合、
 :::
 
 
-#### インストール (Mac)
+### インストール (Mac)
 [Zotero](https://www.zotero.org/) も[VSCode](https://code.visualstudio.com/)もそれぞれのサイトからインストール可能ですが、 Macの場合は[Homebrew](https://brew.sh/index_ja)を用いることもできます。 TeXのインストールもまとめて
 ```shell
 brew update && brew install mactex-no-gui visual-studio-code zotero
@@ -67,7 +67,7 @@ sudo tlmgr update --all
 MacOS用のパッケージマネージャーです。 ターミナルからコマンドで、 ソフトウェアのインストール、 アップデート、 削除ができるようになります。 Homebrew自体のインストールは、 [Homebrewのサイト](https://brew.sh/index_ja)上のコマンドをコピーして、 ターミナルで実行するだけです。 
 :::
 
-### ファイル構成
+## ファイル構成
 このワークフローに対応したレポジトリを用意しました。 ファイル構成の例としてご活用ください。
 https://github.com/nicetak/bibtex-demo
 また、VSCodeのRemote Containersを用いて、OSに依存しない完全な再現が可能です。^[ただし、 Zoteroのインストールを除きます。]
@@ -79,7 +79,7 @@ Dockerを用いて仮想マシン上でVSCodeを実行する環境です。 仮�
 
 
 
-## 文献引用ワークフロー
+# 文献引用ワークフロー
 論文中での適切なフォーマットでの引用と参考文献リストの作成を自動化します。
 ポイントは
 - 引用する可能性のある論文をZoteroで一ヶ所にまとめる(引用しなくてもいい)
@@ -87,14 +87,14 @@ Dockerを用いて仮想マシン上でVSCodeを実行する環境です。 仮�
 
 だけで、 文献引用のあらゆる面倒ごとから解放されるという点です。 ほとんど自動化されているので、 **ミスもなくなります。** 
 
-### Zotero
+## Zotero
 :::message
 デモンストレーションのために`demo`というライブラリーをZotero内に作成していますが、普段はデフォルトの`My Library`を使います。
 :::
-#### 1. プロジェクト用のcollectionを作成
+### 1. プロジェクト用のcollectionを作成
 ![](/images/zotero-tex-bibtex/create-collection.gif)
 
-#### 2. 文献の追加
+### 2. 文献の追加
 Zoteroにアイテムを追加するにはいくつか方法があります.
 1. ドラッグ&ドロップ
 2. ブラウザのZotero拡張([Chrome](https://chrome.google.com/webstore/detail/zotero-connector/ekhagklcjbdpajgpjgmbionohlpdbjgc?hl=ja), [Firefox](https://chrome.google.com/webstore/detail/zotero-connector/ekhagklcjbdpajgpjgmbionohlpdbjgc?hl=en))
@@ -119,7 +119,7 @@ Zoteroにアイテムを追加するにはいくつか方法があります.
 アイテムをインポートした場合、Libraryにアイテムが追加されるようなので、Libraryを開いてドラッグ&ドロップなどでcollectionにも追加してください。
 :::
 
-#### 3. `.bib`ファイルの作成
+### 3. `.bib`ファイルの作成
 1. collectionのフォルダを右クリックして`export collection`をクリック
 1. `exportOption.keepUpdated`を選択して^[この名前はアップデートで変わることがあります]、OKをクリック
 1. `main.tex`と同一のディレクトリに保存します^[`main.tex`内で相対パスを指定すればどこに保存してもいいです]
@@ -129,8 +129,8 @@ Zoteroにアイテムを追加するにはいくつか方法があります.
 `exportOption.keepUpdated`のおかげで、新しくアイテムを追加した場合`.bib`ファイルも自動で変更されます。
 :::
 
-### BibTeX
-#### 1. `natbib`の設定
+## BibTeX
+### 1. `natbib`の設定
 「著者名(年)」のような引用の形式を扱うために`natbib.sty`を読みこみます。これは`.bst`ファイルの依存にもよるので分野ごとに違う可能性があります。後述する`econ-aea.bst`の前提となっているのが`natbib`のため、ここで読み込みます。
 
 プリアンブルに以下を追加
@@ -138,7 +138,7 @@ Zoteroにアイテムを追加するにはいくつか方法があります.
 \usepackage[longnamefirst]{natbib}
 ```
 
-#### 2. `\bibliography{}`と`\bibliographystyle{}`を設定する
+### 2. `\bibliography{}`と`\bibliographystyle{}`を設定する
 BibTeXの設定は簡単で、
 - `\bibliography{}` → `.bib`ファイルの名前
 - `\bibliographystyle{}` → 参考文献や引用の形式。`.bst`ファイル
@@ -153,7 +153,7 @@ American Economic Association (AEA)の出版するジャーナルに準拠した
 [経済学におけるBibTeXの利用](https://qiita.com/shiro_takeda/items/92adf0b20c501548355e)
 :::
 
-#### 3. BibTeXのキーを用いて引用する
+### 3. BibTeXのキーを用いて引用する
 `natbib`では引用の際に`\citet`または`\citep`を用います。この時使用するキーはZotero内の文献情報の一番上にある`Citation Key:`の部分です。
 ![](/images/zotero-tex-bibtex/citation-key.png)
 *Piketty et al. (2018)のCitation Key*
@@ -222,7 +222,7 @@ BibTeXの便利な点として、文中で**引用された文献だけ**が参�
 ::::
 
 
-## VSCode LaTeX Workshop Extension
+# VSCode LaTeX Workshop Extension
 VSCodeで$\LaTeX$を使う場合、LaTeX Workshop Extensionを使うことを強くおすすめします。
 https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop
 
@@ -230,20 +230,20 @@ https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop
 ![](/images/zotero-tex-bibtex/latex-workshop.gif)
 公式のページの機能の紹介がかなり分かりやすいので、上記のリンクから見ることをおすすめします。
 
-### $\LaTeX$ にGrammarlyを直接かける方法
+## $\LaTeX$ にGrammarlyを直接かける方法
 [Grammarly](https://www.grammarly.com/)といえば、言わずと知れた英文添削ソフトです。公式にはWordやGoogle Docsなどに対応していますが、実は非公式ながら$\LaTeX$に直接Grammarlyをかける方法があります。
-#### VSCodeの場合
+### VSCodeの場合
 以下のVSCodeの拡張機能を使うだけです。ログインにも対応しているので、有料会員の機能も使うことができます。詳しい使い方は以下のリンク先を参考にしてください。
 https://marketplace.visualstudio.com/items?itemName=znck.grammarly
 
-#### Overleafの場合
+### Overleafの場合
 Grammarly公式のChrome拡張である以下を入れた状態で
 https://chrome.google.com/webstore/detail/grammarly-for-chrome/kbfnbcaeplbcioakkpcpgfkobkghlhen
 以下の拡張を入れます。
 https://chrome.google.com/webstore/detail/overleaf-textarea/iejmieihafhhmjpoblelhbpdgchbckil
 詳しい使い方は上記のChromeストアのOverleaf textareaのページを見てください。
 
-## おわりに
+# おわりに
 
 以上が私が普段使っている$\LaTeX$環境です。一度設定してしまえば、
 - 引用する可能性のある文献をZoteroに追加する
