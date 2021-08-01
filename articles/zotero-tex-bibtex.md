@@ -52,7 +52,7 @@ VSCodeを利用した場合、
 :::
 
 
-## インストール (Mac)
+### インストール (Mac)
 [Zotero](https://www.zotero.org/) も[VSCode](https://code.visualstudio.com/)もそれぞれのサイトからインストール可能ですが、 Macの場合は[Homebrew](https://brew.sh/index_ja)を用いることもできます。 TeXのインストールもまとめて
 ```shell
 brew update && brew install mactex-no-gui visual-studio-code zotero
@@ -91,10 +91,10 @@ Dockerを用いて仮想マシン上でVSCodeを実行する環境です。 仮�
 :::message
 デモンストレーションのために`demo`というライブラリーをZotero内に作成していますが、普段はデフォルトの`My Library`を使います。
 :::
-## 1. プロジェクト用のcollectionを作成
+### 1. プロジェクト用のcollectionを作成
 ![](/images/zotero-tex-bibtex/create-collection.gif)
 
-## 2. 文献の追加
+### 2. 文献の追加
 Zoteroにアイテムを追加するにはいくつか方法があります.
 1. ドラッグ&ドロップ
 2. ブラウザのZotero拡張([Chrome](https://chrome.google.com/webstore/detail/zotero-connector/ekhagklcjbdpajgpjgmbionohlpdbjgc?hl=ja), [Firefox](https://chrome.google.com/webstore/detail/zotero-connector/ekhagklcjbdpajgpjgmbionohlpdbjgc?hl=en))
@@ -119,7 +119,7 @@ Zoteroにアイテムを追加するにはいくつか方法があります.
 アイテムをインポートした場合、Libraryにアイテムが追加されるようなので、Libraryを開いてドラッグ&ドロップなどでcollectionにも追加してください。
 :::
 
-## 3. `.bib`ファイルの作成
+### 3. `.bib`ファイルの作成
 1. collectionのフォルダを右クリックして`export collection`をクリック
 1. `exportOption.keepUpdated`を選択して^[この名前はアップデートで変わることがあります]、OKをクリック
 1. `main.tex`と同一のディレクトリに保存します^[`main.tex`内で相対パスを指定すればどこに保存してもいいです]
@@ -130,7 +130,7 @@ Zoteroにアイテムを追加するにはいくつか方法があります.
 :::
 
 ## BibTeX
-## 1. `natbib`の設定
+### 1. `natbib`の設定
 「著者名(年)」のような引用の形式を扱うために`natbib.sty`を読みこみます。これは`.bst`ファイルの依存にもよるので分野ごとに違う可能性があります。後述する`econ-aea.bst`の前提となっているのが`natbib`のため、ここで読み込みます。
 
 プリアンブルに以下を追加
@@ -138,7 +138,7 @@ Zoteroにアイテムを追加するにはいくつか方法があります.
 \usepackage[longnamefirst]{natbib}
 ```
 
-## 2. `\bibliography{}`と`\bibliographystyle{}`を設定する
+### 2. `\bibliography{}`と`\bibliographystyle{}`を設定する
 BibTeXの設定は簡単で、
 - `\bibliography{}` → `.bib`ファイルの名前
 - `\bibliographystyle{}` → 参考文献や引用の形式。`.bst`ファイル
@@ -153,7 +153,7 @@ American Economic Association (AEA)の出版するジャーナルに準拠した
 [経済学におけるBibTeXの利用](https://qiita.com/shiro_takeda/items/92adf0b20c501548355e)
 :::
 
-## 3. BibTeXのキーを用いて引用する
+### 3. BibTeXのキーを用いて引用する
 `natbib`では引用の際に`\citet`または`\citep`を用います。この時使用するキーはZotero内の文献情報の一番上にある`Citation Key:`の部分です。
 ![](/images/zotero-tex-bibtex/citation-key.png)
 *Piketty et al. (2018)のCitation Key*
@@ -232,11 +232,11 @@ https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop
 
 ## $\LaTeX$ にGrammarlyを直接かける方法
 [Grammarly](https://www.grammarly.com/)といえば、言わずと知れた英文添削ソフトです。公式にはWordやGoogle Docsなどに対応していますが、実は非公式ながら$\LaTeX$に直接Grammarlyをかける方法があります。
-## VSCodeの場合
+### VSCodeの場合
 以下のVSCodeの拡張機能を使うだけです。ログインにも対応しているので、有料会員の機能も使うことができます。詳しい使い方は以下のリンク先を参考にしてください。
 https://marketplace.visualstudio.com/items?itemName=znck.grammarly
 
-## Overleafの場合
+### Overleafの場合
 Grammarly公式のChrome拡張である以下を入れた状態で
 https://chrome.google.com/webstore/detail/grammarly-for-chrome/kbfnbcaeplbcioakkpcpgfkobkghlhen
 以下の拡張を入れます。
