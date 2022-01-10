@@ -10,7 +10,6 @@ published: true
 ### 研究環境を全部Dockerにしたい
 みなさん, Dockerって便利ですよね. プロジェクトを複数持っている時に, 環境を簡単に切り替えることができて最高ですよね. また複数人のプロジェクトも同一の環境で実行できるって, 魅力的ですよね.
 
-
 ### なんなら, 全部 VSCodeのDev Containerにしたい
 VSCodeのRemote Container Extension機能のおかげで, Docker環境がますます便利になったと思います. コンテナ内をまるでローカルのようにGUIで扱えるのでDockerに関する学習コストがとりわけ少なくなったように感じます. 個人的には共同のプロジェクトでもDockerを使ってもらいやすくなったと感じています (環境はこちらで構築すれば良いので.)
 
@@ -39,7 +38,6 @@ VSCodeで$\LaTeX$を書く際のTipsは以前書いた記事も参考にして�
 クローンした後, **"Open in container"** で環境がすべて整います.
 なお, DVCはコンテナ上で開いた後に次節のセットアップをする必要があります.
 @[card](https://github.com/nicetak/docker-r-template)
-
 
 ### Dockerfile
 ```docker
@@ -89,6 +87,7 @@ RUN R -e "install.packages( \
 install.packages()
 ```
 を実行しているだけです. 追加で必要なパッケージは基本的に`Dockerfile`に書いてビルドする形で対応しています. 現状のDockerfileには私の研究環境で基本的に必須のパッケージを入れています.
+
 :::details GitHubで開発中のパッケージを用いる場合
 CRANにまだ登録されていないパッケージをインストールする場合は,
 ```Dockerfile
@@ -188,7 +187,6 @@ Go to the following link in your browser:
 Enter verification code:
 ```
 というメッセージが出るので, このリンクをブラウザで開き, Google アカウントでログインした後, 認証コードが表示されるので, それをコピーして"Enter verification code:"の後にペーストして認証を行います.
-
 
 # ワークフロー
 - プロジェクトを始める場合は以下の1を行ってください
