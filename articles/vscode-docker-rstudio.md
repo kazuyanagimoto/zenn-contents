@@ -1,9 +1,9 @@
 ---
 title: "VSCode + Docker + Rstudio + DVC でポータブルな研究環境を作る"
-emoji: "📝"
+emoji: "🐳"
 type: "tech" 
-topics: ["vscode", "docker", "r", "rstudio"]
-published: false
+topics: ["vscode", "docker", "r", "rstudio", "dvc"]
+published: true
 ---
 
 # はじめに
@@ -18,10 +18,12 @@ VSCodeのRemote Container Extension機能のおかげで, Docker環境がます�
 
 ### 条件
 - `git clone` と VSCodeの **Open Floder in Container** ですべての環境を整える
-- Rはサーバー版のRstudioを使う^[ブラウザで `localhost:8787` とアドレスバーに打って使います]
+- Rはサーバー版のRstudioを使う.^[ブラウザで `localhost:8787` とアドレスバーに打って使います] VSCode上の開発も可能にする
 - $\LaTeX$はVSCodeで書く
 - データはDVC経由で管理する (後述)
 
+VSCodeで$\LaTeX$を書く際のTipsは以前書いた記事も参考にしてみてください.
+@[card](https://zenn.dev/nicetak/articles/zotero-tex-bibtex)
 
 # 環境
 ## ソフトウェア
@@ -36,6 +38,8 @@ VSCodeのRemote Container Extension機能のおかげで, Docker環境がます�
 この記事に対応したレポジトリを用意しました.
 クローンした後, **"Open in container"** で環境がすべて整います.
 なお, DVCはコンテナ上で開いた後に次節のセットアップをする必要があります.
+@[card](https://github.com/nicetak/docker-r-template)
+
 
 ### Dockerfile
 ```docker
@@ -84,7 +88,7 @@ RUN R -e "install.packages( \
 ```R
 install.packages()
 ```
-を実行しているだけです. 追加で必要なパッケージは基本的に`Dockerfile`に書いてビルドする形で対応しています.
+を実行しているだけです. 追加で必要なパッケージは基本的に`Dockerfile`に書いてビルドする形で対応しています. 現状のDockerfileには私の研究環境で基本的に必須のパッケージを入れています.
 :::details GitHubで開発中のパッケージを用いる場合
 CRANにまだ登録されていないパッケージをインストールする場合は,
 ```Dockerfile
@@ -92,6 +96,9 @@ RUN Rscript -e "devtools::install_github('tidyverse/googlesheets4')"
 ```
 などを追加して, `devtools::install_github`を用いてインストールできます.
 :::
+
+なお, *languageserver* パッケージをいれることで, VSCode上でRを開発するための拡張機能が利用できます.
+@[card](https://marketplace.visualstudio.com/items?itemName=Ikuyadeu.r)
 
 ### docker-compose.yml
 Remote Containers は仕組み上Dockerfileのみでもコンテナ環境を作れるはずですが, rocker環境の場合はdocker-compose.yml をベースにしないとRstudioサーバーが立ち上がりません.
@@ -124,7 +131,7 @@ docker-compose up --build
 - ポート8787 をフォワードしている (Rstudio サーバーのデフォルトポート)
 - `workspaceFolder` を設定している (つまり, デフォルトの`/workspaces` ではない)
 
-ぐらいです. 
+ぐらいです. なお, 拡張機能の`ikuyadeu.r`は前述のR開発のための拡張機能です.
 
 # DVC
 ## DVC とは
@@ -148,7 +155,7 @@ DVCでは以下のようにしてデータを管理します.
 :::
 
 ### クラウドストレージの選択について
-DVCが対応しているリモートストレージやプロトコルは[Supported storage types](https://dvc.org/doc/command-reference/remote/add#supported-storage-types)にありますが, 筆者のおすすめはGoogle Driveです. 理由は
+DVCが対応しているリモートストレージやプロトコルは[Supported storage types](https://dvc.org/doc/command-reference/remote/add#supported-storage-types)にありますが, 私のおすすめはGoogle Driveです. 理由は
 - ほとんどの研究者はアカウントをすでに持っている
 - 教育機関のGoogleアカウントはGoogle Driveのストレージが無制限である
 - コラボレーターがデータをダウンロードする際のアクセス権限はGoogle Driveのフォルダの共有設定を行うだけである
@@ -213,12 +220,16 @@ Enter verification code:
 1. `dvc push`
 
 ## デモンストレーション
-このワークフローの簡便さを体感していただくために, 簡単なデモを行います. 先ほど紹介したレポジトリの`main`ブランチはプロジェクトを開始するためのテンプレートですが, `demo`ブランチはすでに私がdvcのセットアップした状態となっています.
+このワークフローの簡便さを体感していただくために, 簡単なデモを行います. [先ほど紹介したレポジトリ](https://github.com/nicetak/docker-r-template)の`main`ブランチはプロジェクトを開始するためのテンプレートですが, `demo`ブランチはすでに私がdvcのセットアップした状態となっています.
 `demo`ブランチをプルした後
 - **Open Folder in Container**
 - `dvc pull`
 
 を行うことで, 私が分析を行った環境を整えることができます.
+:::message 
+`dvc pull` を行うと, ご自身のGoogleアカウントの認証が必要になります. このデモデータは私のGoogle Drive内に保存されており, 誰でも閲覧できる状態になっています.
+:::
+
 分析結果を再現するためには
 - ブラウザで`localhost:8787`にアクセスしRstudioを開く
 - 右上のOpen Projectボタンから, `work/work.Rproj`を選択しRのプロジェクトを開く
