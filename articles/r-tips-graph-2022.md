@@ -3,7 +3,7 @@ title: "Rで論文を書く実践的なテクニック集 (グラフ編)"
 emoji: "📊"
 type: "tech" 
 topics: ["r", "ggplot"]
-published: false
+published: true
 ---
 
 :::message
