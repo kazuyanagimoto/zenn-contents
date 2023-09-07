@@ -207,7 +207,7 @@ CSVやTSVファイルなどをサクッと確認や編集したいときに大�
 
 ### 管理者
 
-1. DockerのVolumeを作る. (初めてこのテンプレートを使う際のみ)
+0. DockerのVolumeを作る. (初めてこのテンプレートを使う際のみ)
 
 ```shell
 docker volume create renv
@@ -217,37 +217,43 @@ docker volume create TinyTeX
 docker volume create fonts
 ```
 
-2. GitHubでこのテンプレートから新しいレポジトリを作り, ローカルにクローンする.
-3. VSCodeでこのレポジトリを開く. (Remote Containers)
-4. Rのプロジェクトを作成する. Rstudioを用いる場合, `localhost:8787`にアクセスし, プロジェクトを作成する.
-5. `renv::init()` でパッケージ管理を開始する. おそらく事前に`install.packages("renv")`が必要.
-6. `pip install dvc dvc-gdrive` でDVCをインストールする. 二回目以降はpipのキャッシュがあるためこのコマンドは不要.
-7. DVC環境を設定する
-   - Google Drive上にフォルダを作成し, そのフォルダのIDをコピーする.
-   - `dvc init && dvc remote add -d myremote gdrive://<Google DriveのフォルダID>` を実行する.
-   - Google Driveのフォルダは共同作業者と共有の設定をする.
-8. LaTeX用のVSCodeの設定をする. 基本的には`.vscode/_settings.json` を `.vscode/settings.json` にコピーするだけでOK.
-9. Juliaの環境を設定する. `Project.toml`の空ファイルを作成し, `Pkg.activate()`でアクティベートする.
+1. GitHubでこのテンプレートから新しいレポジトリを作り, ローカルにクローンする
+1. VSCodeでこのレポジトリを開く. (Remote Containers)
+1. Rのプロジェクトを作成する. Rstudioを用いる場合, `localhost:8787`にアクセスし, プロジェクトを作成する
+1. `renv::init()` でパッケージ管理を開始する
+1. `pip install dvc dvc-gdrive` でDVCをインストールする. 二回目以降はpipのキャッシュがあるためこのコマンドは不要
+1. DVC環境を設定する
+   - Google Drive上にフォルダを作成し, そのフォルダのIDをコピーする
+   - `dvc init && dvc remote add -d myremote gdrive://<Google DriveのフォルダID>` を実行する
+   - Google Driveのフォルダは共同作業者と共有の設定をする
+1. LaTeX用のVSCodeの設定をする
+   - 初めての場合, `tinytex::install_tinytex(dir = "/home/rstudio/.TinyTeX", force = TRUE)` を実行して, TinyTeXをインストールする
+   - `.vscode/_settings.json` を `.vscode/settings.json` にコピーする
+1. Juliaの環境を設定する. `Project.toml`の空ファイルを作成し, `Pkg.activate()`でアクティベートする
 
 ### 共同作業者
 
-1. DockerのVolumeを作る. コマンドは管理者と同様. (初めてこのテンプレートを使う際のみ)
-2. GitHubで管理者が作ったレポジトリをクローンする.
-3. VSCodeでこのレポジトリを開く. (Remote Containers)
-4. Rのプロジェクトを開く.
-6. `renv::restore()` でパッケージをインストールする.
-7. `dvc pull` でデータをダウンロードする.
-8. LaTeX用のVSCodeの設定をする. 基本的には`.vscode/_settings.json` を `.vscode/settings.json` にコピーするだけでOK.
-9. Juliaのパッケージをインストールする. `Pkg.activate(); Pkg.instantiate()`でインストールする.
+0. DockerのVolumeを作る. コマンドは管理者と同様. (初めてこのテンプレートを使う際のみ)
+1. GitHubで管理者が作ったレポジトリをクローンする
+1. VSCodeでこのレポジトリを開く. (Remote Containers)
+1. Rのプロジェクトを開く
+1. `renv::restore()` でパッケージをインストールする.
+1. Pythonパッケージ (DVCを含む) を `pip install -r requirements.txt` でインストールする
+1. `dvc pull` でデータをダウンロードする
+1. LaTeX用のVSCodeの設定をする
+   - 初めての場合, `tinytex::install_tinytex(dir = "/home/rstudio/.TinyTeX", force = TRUE)` を実行して, TinyTeXをインストールする
+   - `.vscode/_settings.json` を `.vscode/settings.json` にコピーする
+1. Juliaのパッケージをインストールする. `Pkg.activate(); Pkg.instantiate()`でインストールする
 
 
 ### 作業中
 
-1. Rのパッケージを追加する際は, `renv::snapshot()`で記録を`renv.lock`ファイルに残す.
-2. DVCでデータを追加する際は, `dvc add`で追加する. 基本的には`dvc add data/`でディレクトリごと追加する.
-3. Juliaのパッケージを追加する際は, `Pkg.add("パッケージ名")`で追加する. `Project.toml`に自動で記録される.
-4. 以上の作業が終わった上で, `git add`, `git commit`, `git push` する.
-5. 作業が終わったら, `dvc push` でデータをアップロードする.
+1. Rのパッケージを追加する際は, `renv::snapshot()`で記録を`renv.lock`ファイルに残す
+1. Juliaのパッケージを追加する際は, `Pkg.add("パッケージ名")`で追加する. `Project.toml`に自動で記録される
+1. Pythonのパッケージを追加する際は, `pip install PACKAGE_NAME`で追加し, `pip freeze > requirements.txt` で記録する
+1. DVCでデータを追加する際は, `dvc add`で追加する. 基本的には`dvc add data/`でディレクトリごと追加する
+1. 以上の作業が終わった上で, `git add`, `git commit`, `git push` する
+1. 作業が終わったら, `dvc push` でデータをアップロードする
 
 
 ## まとめ
