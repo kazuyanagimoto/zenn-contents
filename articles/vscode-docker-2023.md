@@ -61,7 +61,7 @@ https://github.com/kazuyanagimoto/dockerR/blob/main/Dockerfile
 
 ### R
 
-ホスト側にRのパッケージはキャッシュするので, `rocker/rstudio`で十分です. `renv`がインストールされていないことだけが玉に瑕で, 最初に環境を構築するときは `install.packages("renv")` しないといけません. 地理情報を扱うプロジェクトの時だけ `rocker/geospatial` に変更しています.
+ホスト側にRのパッケージはキャッシュするので, `rocker/rstudio`で十分です. 地理情報を扱うプロジェクトの時だけ `rocker/geospatial` に変更しています.
 
 パッケージ管理は`renv`一択であると考えます. パッケージを追加するたびごとにいつも`renv::snapshot()`で記録を`renv.lock`ファイルに残すことができ, 同様のパッケージを他のコンピュータで再現する際にも `renv::restore()` で一発です. `renv`を用いたパッケージ管理は以下の記事でも解説しています.
 
@@ -116,21 +116,19 @@ ssh-add $HOME/.ssh/id_ed25519
 
 https://github.com/nicetak/dockerR/blob/main/docker-compose.yml
 
-ポイントは`renv` のキャッシュをホスト側の[Docker Volumes](https://docs.docker.com/storage/volumes/)にマウントしているところです. これによって一度インストールしたRパッケージはホスト側にも保存されることになるため, DockerをビルドをするたびにRのパッケージをインストールし直す必要がなくなります. また, 複数のプロジェクトでDocker環境を使い分けている際に, 重複するパッケージをインストールしなくてよくなります. また, Julia, Python, TinyTeXのパッケージにも同様にキャッシュしています.
+ポイントは`cache`という[Docker Volumes](https://docs.docker.com/storage/volumes/)を`$HOME/.cache/`にマウントしているところです. `renv`はデフォルトで`$HOME/.cache/R/renv`にキャッシュしますし, PythonやJuliaのライブラリのキャッシュも`PYTHONUSERBASE`と`JULIA_DEPOT_PATH`という環境変数を指定することで`$HOME/.cache/`以下に保存しています. これによって一度インストールしたパッケージはホスト側にも保存されることになるため, DockerをビルドをするたびにRのパッケージをインストールし直す必要がなくなります. また, 複数のプロジェクトでDocker環境を使い分けている際に, 重複するパッケージをインストールしなくてよくなります. なお, TinyTeXのパッケージやフォントも同様にキャッシュしています.
 
 :::details Docker Volumesとは
 
 Docker VolumesはDockerコンテナのデータをホスト側に保存するための仕組みです. これによって, コンテナを削除してもデータを保持することができます. なお, 初めてこのテンプレートを使う際はDocker Volumesが存在しないので, 以下のコマンドで作成する必要があります.
 
 ```shell
-docker volume create renv
-docker volume create pip
-docker volume createe julia
+docker volume create cache
 docker volume create TinyTeX
 docker volume create fonts
 ```
 
-なお, このコマンド叩かずにDockerをビルドすると, Docker Volumesが自動で作成されます. この場合はDocker Volumesの名前が`PROJECTNAME_renv`のようになるので, 他のプロジェクトですでにインストールしたパッケージを使い回すことができません.
+なお, このコマンド叩かずにDockerをビルドすると, Docker Volumesが自動で作成されます. この場合はDocker Volumesの名前が`PROJECTNAME_cache`のようになるので, 他のプロジェクトですでにインストールしたパッケージを使い回すことができません.
 
 また, 以前の私の記事のようにインターネット上では, Docker Volumesを使わずに `~/.cache/R/renv` のようにホストOSの領域に直接マウントしている例がありますが, これはソースコードの場合は良いですが, パッケージの場合はおすすめできません. MacOSやWindows (WSL2を除く) の場合ファイルシステムがLinux (Docker) と異なるため, パッケージを読んで実行する際に著しくスピードが落ちる可能性があります. Docker内で使うパッケージはDockerの領域でキャッシュしましょう.
 
@@ -210,9 +208,7 @@ CSVやTSVファイルなどをサクッと確認や編集したいときに大�
 0. DockerのVolumeを作る. (初めてこのテンプレートを使う際のみ)
 
 ```shell
-docker volume create renv
-docker volume create pip
-docker volume create julia
+docker volume create cache
 docker volume create TinyTeX
 docker volume create fonts
 ```
@@ -248,8 +244,8 @@ docker volume create fonts
 
 ### 作業中
 
-1. Rのパッケージを追加する際は, `renv::snapshot()`で記録を`renv.lock`ファイルに残す
-1. Juliaのパッケージを追加する際は, `Pkg.add("パッケージ名")`で追加する. `Project.toml`に自動で記録される
+1. Rのパッケージを追加する際は, `install.packages("PACKAGENAME")` でインストールし, `renv::snapshot()`で記録を`renv.lock`ファイルに残す
+1. Juliaのパッケージを追加する際は, `Pkg.add("PACKAGENAME")`で追加する. `Project.toml`に自動で記録される
 1. Pythonのパッケージを追加する際は, `pip install PACKAGE_NAME`で追加し, `pip freeze > requirements.txt` で記録する
 1. DVCでデータを追加する際は, `dvc add`で追加する. 基本的には`dvc add data/`でディレクトリごと追加する
 1. 以上の作業が終わった上で, `git add`, `git commit`, `git push` する
