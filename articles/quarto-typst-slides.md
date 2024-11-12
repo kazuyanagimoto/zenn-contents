@@ -1,9 +1,9 @@
 ---
-title: "Quarto + Typstで爆速アカデミックスライド"
+title: "Quarto + Typstでアカデミックなスライドを作る"
 emoji: "🔬"
 type: "tech"
 topics: ["quarto", "typst", "r"]
-published: false
+published: true
 ---
 
 # Beamerひしめく経済学の世界の片隅で
@@ -184,7 +184,7 @@ To cross-reference, you have several options, for example:
 
 ## 局所的なカスタマイズ
 
-スライドを作成する際, 一部のスライドだけスタイルを変更したり, 行間を調整したいことがよくあります. Quartoの[Typst CSS](https://quarto.org/docs/advanced/typst/typst-css.html)を用いたり, 独自機能の`{{vspace 1em}}`を使うことで局所的なカスタマイズが可能です.
+スライドを作成する際, 一部のスライドだけスタイルを変更したり, 行間を調整したいことがよくあります. Quartoの[Typst CSS](https://quarto.org/docs/advanced/typst/typst-css.html)を用いたり, 独自機能の`{{ v 1em}}`を使うことで局所的なカスタマイズが可能です.
 
 ````md:slides.qmd
 ## Ad-hoc Styling
@@ -239,6 +239,9 @@ format:
 
 `small-cite`は, スライドの中で内部的に用いられているパラメータ(`self.colors.neutral-darkest`, YAML上の`color-jet`に相当)を使っているため, `touying-fn-wrapper`を使う必要があります. 実用上は`color-accent`などの色を使いたい時などに使うことを想定しています.
 
+`commands`に登録した関数は, `span`要素として, `environments`に登録した関数は`div`要素として使うことができます. もちろん自作関数ではなく, Typstのネイティブ関数を登録することも可能です. 以下の例はTypstの`align()`関数をQuarto内で使う例を示しています.
+
+https://github.com/kazuyanagimoto/quarto-slides-typst/issues/2
 
 ## アニメーション
 
@@ -262,6 +265,8 @@ Simple animations can be used in lists
 - First {{< pause >}}
 - Second
 ````
+
+![](/images/quarto-typst-slides/simple-anim.png)
 
 ### 複雑なアニメーション
 
@@ -297,6 +302,7 @@ use [`{.only}` environment]{.only options='"2-"'} for not reserving space,
 ::::
 ````
 
+![](/images/quarto-typst-slides/complex-anim.png)
 
 ## グラフ
 
@@ -470,3 +476,8 @@ theme_mitex <- function(x, ...) {
 
 詳細は`tinytable`のGitHub Issue [#345](https://github.com/vincentarelbundock/tinytable/issues/345)を参考にしてください.
 https://github.com/vincentarelbundock/tinytable/issues/345
+
+## おわりに
+
+以上がquarto-clean-typstの基本的な使い方になります. 私自身も実際の研究のプレゼンテーションに使用しており, その出来には満足しております. Beamerのコンパイルの遅さに辟易している方にはぜひ使ってもらいたいです.
+Happy Quarto + Typst Life! 🥂
