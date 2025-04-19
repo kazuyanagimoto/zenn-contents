@@ -53,14 +53,14 @@ quarto typst --version
 #> typst 0.11.0 (2bf9f95d)
 ```
 
-
-
 ### 2. Quarto + Typstによる文章作成
+
+Quartoはそもそも$\LaTeX$やHTMLと互換性のある記法を目指しているため, Typst特有の記法というものはほとんどありません. ヘッダーや数式, 箇条書きといった基本的なMarkdownの記法はもちろん, cross-referenceや図表のキャプションも簡易な記法で記入することができます.
 
 
 ### 3. Typstの表作成
 
-論文において表の作成は日常の茶飯事です. $\LaTeX$においては, 歴史的な経緯から様々なツールが存在しますが, Typstにおいては2024年12月現在唯一の表作成ツールが[`modelsummary`](https://modelsummary.com) + [`tinytable`](https://vincentarelbundock.github.io/tinytable/)です.　`tinytable`はデータフレームから様々な形式の表 (Typst, $\LaTeX$, $Word$など)を作成するRのパッケージであり, `modelsummary`のデフォルトのバックエンドです. `modelsummary`は様々な統計モデルの結果を表形式で出力するRのパッケージであり, Rで実行できる主要なモデルのほとんどをサポートしています. これらのパッケージを用いることで, Typstの表を簡単に作成することができます. なお, Quartoにも対応しているため, Quartoの出力形式がTypstであればこれらのパッケージは自動的にTypstの表を出力します.
+論文において表の作成は日常の茶飯事です. $\LaTeX$においては, 歴史的な経緯から様々なツールが存在しますが, Typstにおいては2024年12月現在唯一の表作成ツールが[`modelsummary`](https://modelsummary.com) + [`tinytable`](https://vincentarelbundock.github.io/tinytable/)です. `tinytable`はデータフレームから様々な形式の表 (Typst, $\LaTeX$, Word など)を作成するRのパッケージであり, `modelsummary`のデフォルトのバックエンドです. `modelsummary`は様々な統計モデルの結果を表形式で出力するRのパッケージであり, Rで実行できる主要なモデルのほとんどをサポートしています. これらのパッケージを用いることで, Typstの表を簡単に作成することができます. なお, Quartoにも対応しているため, Quartoの出力形式がTypstであればこれらのパッケージは自動的にTypstの表を出力します.
 
 一つ問題があるのが, これらのパッケージはTypstの数式入力を変換しないということです. Quartoは`$$`で囲まれた数式を出力形式に合わせて自動で変換するため, Typstの場合でも$\LaTeX$記法の数式をそのまま記述することができます.　しかし, `tinytable`にはそのような機能がないため, 数式を入力する場合はTypst記法で入力する必要があります. これは, Typstのみを出力形式とする場合には問題ありませんが, 他の出力形式にも対応する場合には注意が必要です.
 
@@ -71,7 +71,7 @@ theme_mitex <- function(x, ...) {
     fn <- function(table) {
         if (isTRUE(table@output == "typst")) {
           table@table_string <- gsub("\\$(.*?)\\$", "#mitex(`\\1`)",
-                                    　table@table_string)
+                                     table@table_string)
         }
         return(table)
     }
