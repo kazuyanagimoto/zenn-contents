@@ -90,7 +90,7 @@ clean_data1 <- function(data1_raw) {
 }
 
 tar_plan(
-  data1_raw_file = tar_file("path/to/file/data1.csv"),
+  tar_file(data1_raw_file, "path/to/file/data1.csv"),
   data1_raw = readr::read_csv(data1_raw_file),
   data1_cleaned = clean_data1(data1_raw),
 )
